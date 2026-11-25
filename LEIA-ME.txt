@@ -1,0 +1,56 @@
+SITE DE CASAMENTO — MILENE & GUSTAVO
+
+O projeto continua sendo um site estático, sem dependências instaladas. Para abrir, basta abrir index.html no navegador. Para uma experiência mais próxima da publicação, sirva a pasta com um servidor local estático (por exemplo, a extensão Live Server do VS Code, caso já esteja instalada).
+
+ARQUIVOS PRINCIPAIS
+- index.html: conteúdo, navegação, detalhes do evento, galeria, presentes e RSVP.
+- assets/css/style.css: identidade visual, responsividade e animações.
+- assets/js/main.js: menu, contagem regressiva, carrinho, gerador de mensagens e envio do RSVP.
+- assets/js/config.js: data, Pix e endpoint público do RSVP.
+- assets/images/: fotografias do casal e imagens de referência para decoração.
+
+FUNCIONALIDADES LOCAIS
+- Navegação responsiva e links por seção.
+- Contagem regressiva até 04/12/2027 às 15h (horário de Brasília).
+- Capa fotográfica em tela cheia, com imagem ampliada até as laterais, navegação transparente no topo, zoom cinematográfico sutil e recorte irregular de papel rasgado na base. A navegação ganha fundo claro ao avançar a página. Respeita prefers-reduced-motion e se adapta ao celular.
+- Galeria editorial com fotografias reais do casal, navegação anterior/próxima, teclas de seta e botão de fechar.
+- Fotos decorativas distribuídas entre história, inspiração, cerimônia e recepção. As referências de decoração não identificam o local da recepção.
+- Endereço da cerimônia com mapa público incorporado, carregado somente ao clicar, sem chave de API, e link externo do Google Maps. O mapa faz busca pelo endereço informado, sem coordenadas inventadas.
+- Contribuições simbólicas com dez opções e ilustrações vetoriais locais; os valores são configuráveis no HTML. Não representam compra ou entrega de produtos físicos.
+- Boas-vindas personalizadas com texto curto e fotografia do casal.
+- Atalho do carrinho no cabeçalho, disponível durante a navegação, com indicador atualizado de itens.
+- Carrinho em painel sobreposto, com nome e ilustração de cada opção, quantidade, remoção, subtotal por item, total geral e botão para continuar escolhendo. Um novo clique em Presentear aumenta a quantidade do mesmo presente.
+- Carrinho salvo no localStorage. Apenas identificadores de presentes, quantidades e valores de contribuição livre são guardados; nome e mensagem ficam apenas na memória da página, não são gravados e não são enviados.
+- Revisão final em janela acessível com resumo, nome e mensagem. Pix/cartão ainda não iniciam uma cobrança; a janela informa que o pagamento estará disponível após integração real.
+- Limpar carrinho pede confirmação. Alterações mostram aviso visual discreto.
+- Gerador local de mensagens e cópia para a área de transferência.
+- RSVP valida os campos no navegador. Sem endpoint, avisa que os dados não foram armazenados. Com endpoint, só mostra sucesso se a resposta JSON confirmar { "saved": true }.
+
+INFORMAÇÕES QUE OS NOIVOS PRECISAM CONFIGURAR
+1. Pix: preencher pixKey e pixReceiver em assets/js/config.js apenas com dados que desejam tornar públicos. O Pix atual é apenas exibição/cópia de chave; não gera cobrança dinâmica nem verifica pagamento.
+2. RSVP: configurar rsvpEndpoint com URL HTTPS de um serviço próprio que valide e persista as respostas e devolva JSON { "saved": true } somente depois de confirmar a gravação.
+3. Recepção: endereço, horário, local e eventual imagem própria serão inseridos quando confirmados. O site não inventa esses detalhes.
+
+PROPOSTA DE EVOLUÇÃO DE BACKEND (NÃO IMPLEMENTADA)
+Como o repositório não contém backend nem banco de dados, a próxima etapa deve ser aprovada antes de mudar a arquitetura: criar uma API HTTPS (por exemplo, Node.js com Express) e banco relacional PostgreSQL. A API receberia RSVP, mensagens e intenções de contribuição; tabelas sugeridas: guests, rsvps, gifts, orders, order_items, payments, messages e activity_logs. O checkout hospedado do provedor deve direcionar o recebimento à conta dos noivos, usando credenciais configuradas no servidor; marcar pagamento como confirmado somente após webhook autenticado e validado no backend. Não confiar em retorno do navegador como prova de pagamento.
+
+O painel administrativo deve ser uma área separada, liberada apenas após autenticação real, senha com hash, sessão segura, proteção contra tentativas repetidas e controle de acesso. O backend pode fornecer listas, relatórios e edição de conteúdo. Para métricas, guardar contagens agregadas de visitas e interações, sem identificar nominalmente visitantes anônimos. Definir retenção e acesso aos dados de convidados e mensagens conforme a LGPD. Não publicar painel sem essa camada pronta.
+
+VERIFICAÇÃO E LIMITES
+- Não há integração com servidor, banco de dados, painel administrativo ou provedor de pagamento configurada neste projeto.
+- O formulário não armazena dados localmente nem confirma envio sem resposta explícita de gravação do backend.
+- Nenhuma compra ou pagamento é confirmado pelo carrinho.
+- As referências de recepção são apenas inspiração visual; não representam o espaço contratado.
+- As imagens locais não incluem fotos de sofás, eletrodomésticos ou outros produtos para a casa. Por isso, os presentes usam ilustrações vetoriais próprias, sem downloads externos.
+
+COMO CONFERIR O CARRINHO NO NAVEGADOR
+1. Abra index.html ou sirva a pasta com Live Server. Clique em Presentear em um cartão; confira o aviso e o contador do carrinho no cabeçalho. Abra o painel pelo ícone do cabeçalho; feche pelo X, clicando fora ou com Escape.
+2. Clique novamente no mesmo presente: a quantidade e o subtotal devem aumentar. Use +, − e Remover e confira os subtotais e total.
+3. Adicione um valor livre. Valores vazios, abaixo de R$ 1,00 ou acima de R$ 100.000,00 são rejeitados.
+4. Atualize a página. Os itens devem permanecer, mas o nome e a mensagem devem ficar vazios porque não são persistidos.
+5. Informe seu nome e uma mensagem, clique em Revisar contribuição e confira o resumo. A tela informa que o pagamento ainda não está disponível; não há cobrança.
+6. Clique em Continuar escolhendo presentes para fechar o painel e retornar à lista. Para limpar tudo, clique em Limpar carrinho e confirme. O contador volta a zero e o estado vazio aparece.
+7. Na galeria, abra uma foto. Use as setas da tela ou do teclado para navegar; Escape ou o botão × fecha.
+8. Confira a abertura em uma largura estreita (por exemplo, janela de 390 px): a foto cobre toda a tela, a navegação começa transparente e o recorte irregular da base revela a seção seguinte. Verifique o console do navegador. A composição isolada de mesa após o mapa foi removida; a imagem da recepção e as demais fotos foram preservadas.
+
+As verificações executadas nesta edição incluíram sintaxe dos scripts e caminhos locais, IDs e âncoras. A tentativa de gerar capturas com Chrome headless foi bloqueada pelas permissões de execução do ambiente; por isso, as etapas interativas acima ainda precisam ser conferidas em um navegador comum.
